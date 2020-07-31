@@ -1,2 +1,5 @@
 # Don't check in the local settings
 settings.h
+
+# Don't check in .vscode files
+.vscode/
