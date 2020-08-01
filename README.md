@@ -29,4 +29,5 @@ Daylight Saving Time
 Since I'm in the United States, I started out with Daylight Saving Time. However, since the original author is in the European Union and uses Summer Time, I decided to use his code for Summer Time and add my code for Daylight Saving Time, and allow the user to specify which is to be used in the settings.h file. One of two choices are available:
 * #define USE_DAYLIGHT_SAVING_TIME true
 * #define USE_SUMMER_TIME true
+
 If neither option is defined, the clock will stay on standard time year round.
