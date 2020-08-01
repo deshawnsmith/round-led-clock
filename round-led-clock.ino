@@ -79,6 +79,10 @@ void displayTimeOnLEDs() {
     int minuteIndex = getIndexOfMinuteOrSecond(minute());
     int hourIndex = getIndexOfHour(hour(), minute());
 
+    for(int i = 0; i < LED_COUNT; i++) {
+        LEDArray[i] = CRGB::Black;
+    }
+
     // Set the colors on the LED array to show the time.
     LEDArray[secondIndex] = SECOND_HAND_COLOR;
     LEDArray[minuteIndex] = MINUTE_HAND_COLOR;
@@ -167,18 +171,4 @@ void sendNTPpacket(IPAddress &address) {
     Udp.beginPacket(address, 123);  // NTP requests are to port 123
     Udp.write(packetBuffer, NTP_PACKET_SIZE);
     Udp.endPacket();
-}
-
-boolean isLeapYear(int year) {
-    // The algorithm in the comments is taken from Wikipedia and implemented in code here.
-   if(year % 4 != 0) {      // if (year is not divisible by 4)
-       return false;        // then (it is a common year)
-   }
-   if(year % 100 != 0) {    // else if (year is not divisible by 100)
-       return true;         // then (it is a leap year)
-   }
-   if(year % 400 != 0) {    // else if (year is not divisible by 400)
-       return false;        // then (it is a common year)
-   }
-   return true;             // else (it is a leap year)
 }
