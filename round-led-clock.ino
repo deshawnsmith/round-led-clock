@@ -117,7 +117,7 @@ byte getIndexOfHour(byte hour, byte minute) {
     }
 
     byte hourLED;
-    if( hour < 5) {
+    if( hour < 6) {
         hourLED = (hour * 5) + 30;
     } else {
         hourLED = (hour * 5) - 30;
