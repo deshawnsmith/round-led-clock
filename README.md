@@ -24,6 +24,7 @@ Time Library Used
 -----------------
 Date and time was made easy by using [Paul Stoffregen's Time library](https://github.com/PaulStoffregen/Time). It is simple, elegant, and intuitive. The only difficult part was connecting to WiFi and getting the time from NTP. And it was only difficult until I looked at Paul's sample code that made the job super easy. No need any more to deal with things like leap years and lengths of months in doing the time conversion. 
 
-Daylight Saving Time
---------------------
+Daylight Saving Time/Summer Time
+--------------------------------
 After a bit more research, I decided to try [JChristensen's Arduino Timezone Library](https://github.com/JChristensen/Timezone) to handle time zones because it works with Paul Stoffregen's Time library. It will convert UTC (returned by the Time library) to the correct local time. This can handle both Daylight Saving Time and Summer Time.
+Note: I haven't tested this out yet, but it appears to be doing things properly. Whether or not it switches between Daylight Saving and Standard time remains to be seen. I guess I'll update this in November when I see the change happen.
