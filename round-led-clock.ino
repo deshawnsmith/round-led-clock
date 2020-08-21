@@ -7,26 +7,29 @@
 */
 
 /*
-    Add the following three lines into a settings.h file and place it in the same directory as this file:
+    Add the following lines into a settings.h file and place it in the same directory as this file:
     const char ssid[] = "YourWiFiSSID";
     const char passwd[] = "YourWiFiPassword";
-    float timeZone = YourTimeZone; // Hours offset from UTC. This value should be between -12 and 12. 
-                                   // It's a float because some regions are offset by half hours
-    const char NTPServerName[] = "NTPServerNearYou"; // Find your server name at https://www.pool.nep.org/en/
     .gitignore will ignore this file, so it won't exist when you first clone the repo
 */
 #include "settings.h"     
 #include <FastLED.h>
 #include <TimeLib.h>
+#include <Timezone.h>
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
 
 const int NTP_PACKET_SIZE = 48;     // NTP time is in the first 48 bytes of the message
 byte packetBuffer[NTP_PACKET_SIZE]; // buffer to hold incoming & outgoing NTP packets
 WiFiUDP Udp;
+const char NTPServerName[] = "0.us.pool.ntp.org"; // Find your server name at https://www.pool.nep.org/en/
 unsigned int localPort = 8888;      // Local UDP port for connecting to NTP server
 
 time_t prevDisplay = 0;             // Helps only refresh the display every second
+
+TimeChangeRule mdtRule = {"MDT", Second, Sun, Mar, 2, -360};
+TimeChangeRule mstRule = {"MST", First, Sun, Nov, 2, -420};
+Timezone usMountain(mdtRule, mstRule);
 
 // To simulate the slow movement of the hour hand between hours, set this to true
 #define MOVE_HOUR_HAND_BETWEEN_HOURS true
@@ -146,7 +149,7 @@ time_t getNtpTime() {
             secsSince1900 |= (unsigned long)packetBuffer[41] << 16;
             secsSince1900 |= (unsigned long)packetBuffer[42] << 8;
             secsSince1900 |= (unsigned long)packetBuffer[43];
-            return secsSince1900 - 2208988800UL + timeZone * SECS_PER_HOUR;
+            return usMountain.toLocal(secsSince1900 - 2208988800UL);
         }
     }
     return 0;

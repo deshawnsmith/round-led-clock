@@ -22,12 +22,8 @@ Leon van den Beukel's [github repository](https://github.com/leonvandenbeukel/Ro
 
 Time Library Used
 -----------------
-Date and time was made easy by using Paul Stoffregen's Time library. It's found [here](https://github.com/PaulStoffregen/Time). It is simple, elegant, and intuitive. The only difficult part was connecting to WiFi and getting the time from NTP. And it was only difficult until I looked at Paul's sample code that made the job super easy. No need any more to deal with things like leap years and lengths of months in doing the time conversion. 
+Date and time was made easy by using [Paul Stoffregen's Time library](https://github.com/PaulStoffregen/Time). It is simple, elegant, and intuitive. The only difficult part was connecting to WiFi and getting the time from NTP. And it was only difficult until I looked at Paul's sample code that made the job super easy. No need any more to deal with things like leap years and lengths of months in doing the time conversion. 
 
 Daylight Saving Time
 --------------------
-Since I'm in the United States, I started out with Daylight Saving Time. However, since the original author is in the European Union and uses Summer Time, I decided to use his code for Summer Time and add my code for Daylight Saving Time, and allow the user to specify which is to be used in the settings.h file. One of two choices are available:
-* #define USE_DAYLIGHT_SAVING_TIME true
-* #define USE_SUMMER_TIME true
-
-If neither option is defined, the clock will stay on standard time year round.
+After a bit more research, I decided to try [JChristensen's Arduino Timezone Library](https://github.com/JChristensen/Timezone) to handle time zones because it works with Paul Stoffregen's Time library. It will convert UTC (returned by the Time library) to the correct local time. This can handle both Daylight Saving Time and Summer Time.
