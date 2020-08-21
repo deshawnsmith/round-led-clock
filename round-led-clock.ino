@@ -22,13 +22,20 @@
 const int NTP_PACKET_SIZE = 48;     // NTP time is in the first 48 bytes of the message
 byte packetBuffer[NTP_PACKET_SIZE]; // buffer to hold incoming & outgoing NTP packets
 WiFiUDP Udp;
+// Change the following to an NTP server near you.
 const char NTPServerName[] = "0.us.pool.ntp.org"; // Find your server name at https://www.pool.nep.org/en/
 unsigned int localPort = 8888;      // Local UDP port for connecting to NTP server
 
 time_t prevDisplay = 0;             // Helps only refresh the display every second
 
-TimeChangeRule mdtRule = {"MDT", Second, Sun, Mar, 2, -360};
+// See JChristensen's Timezone library to set up your own time change rules
+// Daylight Saving Time in the Mountain time zone starts on the second Sunday of March at 2am and offsets
+// the time by -360 minutes (-6 hours) from UTC
+TimeChangeRule mdtRule = {"MDT", Second, Sun, Mar, 2, -360}; 
+// Standard time in the Mountain time zone starts on the first Sunday of November at 2am and offsets
+// the time by -420 minutes (-7 hours) from UTC
 TimeChangeRule mstRule = {"MST", First, Sun, Nov, 2, -420};
+// Set up the US Mountain time zone with the daylight saving and standard time change rules
 Timezone usMountain(mdtRule, mstRule);
 
 // To simulate the slow movement of the hour hand between hours, set this to true
@@ -42,13 +49,19 @@ CRGB LEDArray[LED_COUNT];
 
 // These are the colors that will be used for the hour hand, minute hand, and second hand
 // as well as the values that will be used when these hands "overlap" in the LED clock.
-CRGB HOUR_HAND_COLOR = CRGB::Red;
-CRGB MINUTE_HAND_COLOR = CRGB::Green;
-CRGB SECOND_HAND_COLOR = CRGB::Blue;
-CRGB HOUR_AND_MINUTE_COLOR = CRGB::Yellow;
-CRGB HOUR_AND_SECOND_COLOR = CRGB::Magenta;
-CRGB MINUTE_AND_SECOND_COLOR = CRGB::Cyan;
-CRGB ALL_HANDS_COLOR = CRGB::White;
+const CRGB HOUR_HAND_COLOR = CRGB::Red;
+const CRGB MINUTE_HAND_COLOR = CRGB::Green;
+const CRGB SECOND_HAND_COLOR = CRGB::Blue;
+const CRGB HOUR_AND_MINUTE_COLOR = CRGB::Yellow;
+const CRGB HOUR_AND_SECOND_COLOR = CRGB::Magenta;
+const CRGB MINUTE_AND_SECOND_COLOR = CRGB::Cyan;
+const CRGB ALL_HANDS_COLOR = CRGB::White;
+
+// If your clock is too bright or you want to turn it off at night, you can use the following Variables
+// to dim the clock
+const unsigned short DIM_START_HOUR = 22;   // Start dimming the clock at 10pm
+const unsigned short DIM_END_HOUR = 7;  // Stop dimming the clock at 7am
+const unsigned short DIM_PERCENTAGE = 20;   // The brightness of the clock is between 0% (all off) and 100% (full on)
 
 void setup() {
     // Set up the LED array
@@ -103,6 +116,17 @@ void displayTimeOnLEDs() {
     if(secondIndex == minuteIndex && secondIndex == hourIndex) {
         LEDArray[hourIndex] = ALL_HANDS_COLOR;
     }
+
+    // Set the appropriate brightness for the time of day
+    if(hour() >= DIM_START_HOUR || hour() < DIM_END_HOUR)
+    {
+        FastLED.setBrightness(255 * DIM_PERCENTAGE / 100);
+    }
+    else 
+    {
+        FastLED.setBrightness(255);
+    }
+
     FastLED.show();
 }
 
